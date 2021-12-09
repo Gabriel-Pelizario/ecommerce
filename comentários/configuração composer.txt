@@ -1,3 +1,0 @@
-é preciso colocar o nome do vendor para carregar as classes.
-
-Neste caso usamos o nome Hcode para carregar a classe sql por exemplo
