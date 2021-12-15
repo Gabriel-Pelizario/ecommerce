@@ -11,6 +11,7 @@ class Sql {
 
 	private $conn;
 
+	//método construtor
 	public function __construct()
 	{
 
