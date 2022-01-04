@@ -43,12 +43,12 @@ $results_messages = array();
 $example_code = "\nrequire_once '../PHPMailerAutoload.php';";
 $example_code .= "\n\n\$results_messages = array();";
 
-$mail = new PHPMailer(true);  //PHPMailer instance with exceptions enabled
-$mail->CharSet = 'utf-8';
+$this->mail = new PHPMailer(true);  //PHPMailer instance with exceptions enabled
+$this->mail->CharSet = 'utf-8';
 ini_set('default_charset', 'UTF-8');
-$mail->Debugoutput = $CFG['smtp_debugoutput'];
-$example_code .= "\n\n\$mail = new PHPMailer(true);";
-$example_code .= "\n\$mail->CharSet = 'utf-8';";
+$this->mail->Debugoutput = $CFG['smtp_debugoutput'];
+$example_code .= "\n\n\$this->mail = new PHPMailer(true);";
+$example_code .= "\n\$this->mail->CharSet = 'utf-8';";
 $example_code .= "\nini_set('default_charset', 'UTF-8');";
 
 class phpmailerAppException extends phpmailerException
@@ -73,44 +73,44 @@ try {
 
         switch ($_POST['test_type']) {
             case 'smtp':
-                $mail->isSMTP(); // telling the class to use SMTP
-                $mail->SMTPDebug = (integer)$_POST['smtp_debug'];
-                $mail->Host = $_POST['smtp_server']; // SMTP server
-                $mail->Port = (integer)$_POST['smtp_port']; // set the SMTP port
+                $this->mail->isSMTP(); // telling the class to use SMTP
+                $this->mail->SMTPDebug = (integer)$_POST['smtp_debug'];
+                $this->mail->Host = $_POST['smtp_server']; // SMTP server
+                $this->mail->Port = (integer)$_POST['smtp_port']; // set the SMTP port
                 if ($_POST['smtp_secure']) {
-                    $mail->SMTPSecure = strtolower($_POST['smtp_secure']);
+                    $this->mail->SMTPSecure = strtolower($_POST['smtp_secure']);
                 }
-                $mail->SMTPAuth = array_key_exists('smtp_authenticate', $_POST); // enable SMTP authentication?
+                $this->mail->SMTPAuth = array_key_exists('smtp_authenticate', $_POST); // enable SMTP authentication?
                 if (array_key_exists('smtp_authenticate', $_POST)) {
-                    $mail->Username = $_POST['authenticate_username']; // SMTP account username
-                    $mail->Password = $_POST['authenticate_password']; // SMTP account password
+                    $this->mail->Username = $_POST['authenticate_username']; // SMTP account username
+                    $this->mail->Password = $_POST['authenticate_password']; // SMTP account password
                 }
 
-                $example_code .= "\n\$mail->isSMTP();";
-                $example_code .= "\n\$mail->SMTPDebug  = " . $_POST['smtp_debug'] . ";";
-                $example_code .= "\n\$mail->Host       = \"" . $_POST['smtp_server'] . "\";";
-                $example_code .= "\n\$mail->Port       = \"" . $_POST['smtp_port'] . "\";";
-                $example_code .= "\n\$mail->SMTPSecure = \"" . strtolower($_POST['smtp_secure']) . "\";";
-                $example_code .= "\n\$mail->SMTPAuth   = " . (array_key_exists(
+                $example_code .= "\n\$this->mail->isSMTP();";
+                $example_code .= "\n\$this->mail->SMTPDebug  = " . $_POST['smtp_debug'] . ";";
+                $example_code .= "\n\$this->mail->Host       = \"" . $_POST['smtp_server'] . "\";";
+                $example_code .= "\n\$this->mail->Port       = \"" . $_POST['smtp_port'] . "\";";
+                $example_code .= "\n\$this->mail->SMTPSecure = \"" . strtolower($_POST['smtp_secure']) . "\";";
+                $example_code .= "\n\$this->mail->SMTPAuth   = " . (array_key_exists(
                     'smtp_authenticate',
                     $_POST
                 ) ? 'true' : 'false') . ";";
                 if (array_key_exists('smtp_authenticate', $_POST)) {
-                    $example_code .= "\n\$mail->Username   = \"" . $_POST['authenticate_username'] . "\";";
-                    $example_code .= "\n\$mail->Password   = \"" . $_POST['authenticate_password'] . "\";";
+                    $example_code .= "\n\$this->mail->Username   = \"" . $_POST['authenticate_username'] . "\";";
+                    $example_code .= "\n\$this->mail->Password   = \"" . $_POST['authenticate_password'] . "\";";
                 }
                 break;
             case 'mail':
-                $mail->isMail(); // telling the class to use PHP's mail()
-                $example_code .= "\n\$mail->isMail();";
+                $this->mail->isMail(); // telling the class to use PHP's mail()
+                $example_code .= "\n\$this->mail->isMail();";
                 break;
             case 'sendmail':
-                $mail->isSendmail(); // telling the class to use Sendmail
-                $example_code .= "\n\$mail->isSendmail();";
+                $this->mail->isSendmail(); // telling the class to use Sendmail
+                $example_code .= "\n\$this->mail->isSendmail();";
                 break;
             case 'qmail':
-                $mail->isQmail(); // telling the class to use Qmail
-                $example_code .= "\n\$mail->isQmail();";
+                $this->mail->isQmail(); // telling the class to use Qmail
+                $example_code .= "\n\$this->mail->isQmail();";
                 break;
             default:
                 throw new phpmailerAppException('Invalid test_type provided');
@@ -118,50 +118,50 @@ try {
 
         try {
             if ($_POST['From_Name'] != '') {
-                $mail->addReplyTo($_POST['From_Email'], $_POST['From_Name']);
-                $mail->setFrom($_POST['From_Email'], $_POST['From_Name']);
+                $this->mail->addReplyTo($_POST['From_Email'], $_POST['From_Name']);
+                $this->mail->setFrom($_POST['From_Email'], $_POST['From_Name']);
 
-                $example_code .= "\n\$mail->addReplyTo(\"" .
+                $example_code .= "\n\$this->mail->addReplyTo(\"" .
                     $_POST['From_Email'] . "\", \"" . $_POST['From_Name'] . "\");";
-                $example_code .= "\n\$mail->setFrom(\"" .
+                $example_code .= "\n\$this->mail->setFrom(\"" .
                     $_POST['From_Email'] . "\", \"" . $_POST['From_Name'] . "\");";
             } else {
-                $mail->addReplyTo($_POST['From_Email']);
-                $mail->setFrom($_POST['From_Email'], $_POST['From_Email']);
+                $this->mail->addReplyTo($_POST['From_Email']);
+                $this->mail->setFrom($_POST['From_Email'], $_POST['From_Email']);
 
-                $example_code .= "\n\$mail->addReplyTo(\"" . $_POST['From_Email'] . "\");";
-                $example_code .= "\n\$mail->setFrom(\"" .
+                $example_code .= "\n\$this->mail->addReplyTo(\"" . $_POST['From_Email'] . "\");";
+                $example_code .= "\n\$this->mail->setFrom(\"" .
                     $_POST['From_Email'] . "\", \"" . $_POST['From_Email'] . "\");";
             }
 
             if ($_POST['To_Name'] != '') {
-                $mail->addAddress($to, $_POST['To_Name']);
-                $example_code .= "\n\$mail->addAddress(\"$to\", \"" . $_POST['To_Name'] . "\");";
+                $this->mail->addAddress($to, $_POST['To_Name']);
+                $example_code .= "\n\$this->mail->addAddress(\"$to\", \"" . $_POST['To_Name'] . "\");";
             } else {
-                $mail->addAddress($to);
-                $example_code .= "\n\$mail->addAddress(\"$to\");";
+                $this->mail->addAddress($to);
+                $example_code .= "\n\$this->mail->addAddress(\"$to\");";
             }
 
             if ($_POST['bcc_Email'] != '') {
                 $indiBCC = explode(" ", $_POST['bcc_Email']);
                 foreach ($indiBCC as $key => $value) {
-                    $mail->addBCC($value);
-                    $example_code .= "\n\$mail->addBCC(\"$value\");";
+                    $this->mail->addBCC($value);
+                    $example_code .= "\n\$this->mail->addBCC(\"$value\");";
                 }
             }
 
             if ($_POST['cc_Email'] != '') {
                 $indiCC = explode(" ", $_POST['cc_Email']);
                 foreach ($indiCC as $key => $value) {
-                    $mail->addCC($value);
-                    $example_code .= "\n\$mail->addCC(\"$value\");";
+                    $this->mail->addCC($value);
+                    $example_code .= "\n\$this->mail->addCC(\"$value\");";
                 }
             }
         } catch (phpmailerException $e) { //Catch all kinds of bad addressing
             throw new phpmailerAppException($e->getMessage());
         }
-        $mail->Subject = $_POST['Subject'] . ' (PHPMailer test using ' . strtoupper($_POST['test_type']) . ')';
-        $example_code .= "\n\$mail->Subject  = \"" . $_POST['Subject'] .
+        $this->mail->Subject = $_POST['Subject'] . ' (PHPMailer test using ' . strtoupper($_POST['test_type']) . ')';
+        $example_code .= "\n\$this->mail->Subject  = \"" . $_POST['Subject'] .
             ' (PHPMailer test using ' . strtoupper($_POST['test_type']) . ')";';
 
         if ($_POST['Message'] == '') {
@@ -172,20 +172,20 @@ try {
 
         $example_code .= "\n\$body = <<<'EOT'\n" . htmlentities($body) . "\nEOT;";
 
-        $mail->WordWrap = 78; // set word wrap to the RFC2822 limit
-        $mail->msgHTML($body, dirname(__FILE__), true); //Create message bodies and embed images
+        $this->mail->WordWrap = 78; // set word wrap to the RFC2822 limit
+        $this->mail->msgHTML($body, dirname(__FILE__), true); //Create message bodies and embed images
 
-        $example_code .= "\n\$mail->WordWrap = 78;";
-        $example_code .= "\n\$mail->msgHTML(\$body, dirname(__FILE__), true); //Create message bodies and embed images";
+        $example_code .= "\n\$this->mail->WordWrap = 78;";
+        $example_code .= "\n\$this->mail->msgHTML(\$body, dirname(__FILE__), true); //Create message bodies and embed images";
 
-        $mail->addAttachment('images/phpmailer_mini.png', 'phpmailer_mini.png'); // optional name
-        $mail->addAttachment('images/phpmailer.png', 'phpmailer.png'); // optional name
-        $example_code .= "\n\$mail->addAttachment('images/phpmailer_mini.png'," .
+        $this->mail->addAttachment('images/phpmailer_mini.png', 'phpmailer_mini.png'); // optional name
+        $this->mail->addAttachment('images/phpmailer.png', 'phpmailer.png'); // optional name
+        $example_code .= "\n\$this->mail->addAttachment('images/phpmailer_mini.png'," .
             "'phpmailer_mini.png');  // optional name";
-        $example_code .= "\n\$mail->addAttachment('images/phpmailer.png', 'phpmailer.png');  // optional name";
+        $example_code .= "\n\$this->mail->addAttachment('images/phpmailer.png', 'phpmailer.png');  // optional name";
 
         $example_code .= "\n\ntry {";
-        $example_code .= "\n  \$mail->send();";
+        $example_code .= "\n  \$this->mail->send();";
         $example_code .= "\n  \$results_messages[] = \"Message has been sent using " .
             strtoupper($_POST['test_type']) . "\";";
         $example_code .= "\n}";
@@ -194,7 +194,7 @@ try {
         $example_code .= "\n}";
 
         try {
-            $mail->send();
+            $this->mail->send();
             $results_messages[] = "Message has been sent using " . strtoupper($_POST["test_type"]);
         } catch (phpmailerException $e) {
             throw new phpmailerAppException("Unable to send to: " . $to . ': ' . $e->getMessage());

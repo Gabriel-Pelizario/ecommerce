@@ -47,27 +47,27 @@
 require '../PHPMailerAutoload.php';
 
 //Create a new PHPMailer instance
-$mail = new PHPMailer();
+$this->mail = new PHPMailer();
 //Set who the message is to be sent from
 //IMPORTANT: This must match the email address of your certificate.
 //Although the certificate will be valid, an error will be thrown since it cannot be verified that the sender and the signer are the same person.
-$mail->setFrom('from@example.com', 'First Last');
+$this->mail->setFrom('from@example.com', 'First Last');
 //Set an alternative reply-to address
-$mail->addReplyTo('replyto@example.com', 'First Last');
+$this->mail->addReplyTo('replyto@example.com', 'First Last');
 //Set who the message is to be sent to
-$mail->addAddress('whoto@example.com', 'John Doe');
+$this->mail->addAddress('whoto@example.com', 'John Doe');
 //Set the subject line
-$mail->Subject = 'PHPMailer mail() test';
+$this->mail->Subject = 'PHPMailer mail() test';
 //Read an HTML message body from an external file, convert referenced images to embedded,
 //Convert HTML into a basic plain-text alternative body
-$mail->msgHTML(file_get_contents('contents.html'), dirname(__FILE__));
+$this->mail->msgHTML(file_get_contents('contents.html'), dirname(__FILE__));
 //Replace the plain text body with one created manually
-$mail->AltBody = 'This is a plain-text message body';
+$this->mail->AltBody = 'This is a plain-text message body';
 //Attach an image file
-$mail->addAttachment('images/phpmailer_mini.png');
+$this->mail->addAttachment('images/phpmailer_mini.png');
 
 //Configure message signing (the actual signing does not occur until sending)
-$mail->sign(
+$this->mail->sign(
     '/path/to/cert.crt', //The location of your certificate file
     '/path/to/cert.key', //The location of your private key file
     'yourSecretPrivateKeyPassword', //The password you protected your private key with (not the Import Password! may be empty but parameter must not be omitted!)
@@ -75,8 +75,8 @@ $mail->sign(
 );
 
 //Send the message, check for errors
-if (!$mail->send()) {
-    echo "Mailer Error: " . $mail->ErrorInfo;
+if (!$this->mail->send()) {
+    echo "Mailer Error: " . $this->mail->ErrorInfo;
 } else {
     echo "Message sent!";
 }

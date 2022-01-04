@@ -10,29 +10,29 @@
 require '../PHPMailerAutoload.php';
 
 //Create a new PHPMailer instance
-$mail = new PHPMailer;
+$this->mail = new PHPMailer;
 //Set who the message is to be sent from
-$mail->setFrom('from@example.com', 'First Last');
+$this->mail->setFrom('from@example.com', 'First Last');
 //Set an alternative reply-to address
-$mail->addReplyTo('replyto@example.com', 'First Last');
+$this->mail->addReplyTo('replyto@example.com', 'First Last');
 //Set who the message is to be sent to
-$mail->addAddress('whoto@example.com', 'John Doe');
+$this->mail->addAddress('whoto@example.com', 'John Doe');
 //Set the subject line
-$mail->Subject = 'PHPMailer DKIM test';
+$this->mail->Subject = 'PHPMailer DKIM test';
 //This should be the same as the domain of your From address
-$mail->DKIM_domain = 'example.com';
+$this->mail->DKIM_domain = 'example.com';
 //Path to your private key file
-$mail->DKIM_private = 'dkim_private.pem';
+$this->mail->DKIM_private = 'dkim_private.pem';
 //Set this to your own selector
-$mail->DKIM_selector = 'phpmailer';
+$this->mail->DKIM_selector = 'phpmailer';
 //If your private key has a passphrase, set it here
-$mail->DKIM_passphrase = '';
+$this->mail->DKIM_passphrase = '';
 //The identity you're signing as - usually your From address
-$mail->DKIM_identity = $mail->From;
+$this->mail->DKIM_identity = $this->mail->From;
 
 //send the message, check for errors
-if (!$mail->send()) {
-    echo "Mailer Error: " . $mail->ErrorInfo;
+if (!$this->mail->send()) {
+    echo "Mailer Error: " . $this->mail->ErrorInfo;
 } else {
     echo "Message sent!";
 }

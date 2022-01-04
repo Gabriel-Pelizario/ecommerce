@@ -13,15 +13,15 @@ if (array_key_exists('userfile', $_FILES)) {
         // Now create a message
         // This should be somewhere in your include_path
         require '../PHPMailerAutoload.php';
-        $mail = new PHPMailer;
-        $mail->setFrom('from@example.com', 'First Last');
-        $mail->addAddress('whoto@example.com', 'John Doe');
-        $mail->Subject = 'PHPMailer file sender';
-        $mail->Body = 'My message body';
+        $this->mail = new PHPMailer;
+        $this->mail->setFrom('from@example.com', 'First Last');
+        $this->mail->addAddress('whoto@example.com', 'John Doe');
+        $this->mail->Subject = 'PHPMailer file sender';
+        $this->mail->Body = 'My message body';
         // Attach the uploaded file
-        $mail->addAttachment($uploadfile, 'My uploaded file');
-        if (!$mail->send()) {
-            $msg .= "Mailer Error: " . $mail->ErrorInfo;
+        $this->mail->addAttachment($uploadfile, 'My uploaded file');
+        if (!$this->mail->send()) {
+            $msg .= "Mailer Error: " . $this->mail->ErrorInfo;
         } else {
             $msg .= "Message sent!";
         }
