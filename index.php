@@ -305,6 +305,22 @@ $app->post("/admin/categories/:idcategory", function($idcategory){
 
 });
 
+//Rota para as categorias
+$app->get("/categories/:idcategory", function($idcategory){
+
+	$category = new Category();
+
+	//carregando a categoria
+	$category->get((int)$idcategory);
+
+	$page = new page();
+	$page->setTpl("category",[
+		'category'=>$category->getValues(),
+		'products'=>[]
+	]); 
+
+});
+
 //iniciar os templates
 $app->run();
 
