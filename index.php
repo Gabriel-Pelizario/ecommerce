@@ -16,6 +16,7 @@ $app->config('debug', true);
 //o que está acima são padrões que sempre é utilizado em projetos
 
 //chamando as rotas
+require_once("functions.php");
 require_once("site.php");
 require_once("admin.php");
 require_once("admin-users.php");
