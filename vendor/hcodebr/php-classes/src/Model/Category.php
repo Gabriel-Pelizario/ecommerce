@@ -110,6 +110,41 @@ class Category extends Model {
 		}
 	}
 
+	//Configuração da paginação do front
+	public function getProductsPage($page = 1, $itemsParPage = 8)
+	{
+
+		//Qual é a regra?
+		//Se eu estiver na pagina 1, 1-1 = 0, 0*3 = 0 (Primeira página começa no 0)
+		//Se eu estiver na pagina 2, 2-1 = 1, 1*3 = 3 (Pulou o 0,1,2 e começa no registro 3 e me traga 3)
+		$start = ($page-1)*$itemsParPage;
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+		SELECT sql_calc_found_rows *
+			FROM tb_products a 
+			INNER JOIN tb_productscategories b ON a.idproduct = b.idproduct
+			INNER JOIN tb_categories c ON c.idcategory = b.idcategory
+			WHERE c.idcategory = :idcategory
+			LIMIT $start, $itemsParPage;
+		", [
+			':idcategory'=>$this->getidcategory()
+		]);
+
+		//Segunda consulta
+		$resultTotal = $sql->select("SELECT found_rows() as nrtotal;");
+
+		return [
+			'data'=>Product::checkList($results),
+			'total'=> (int)$resultTotal[0]["nrtotal"],
+			'pages'=>ceil($resultTotal[0]["nrtotal"] / $itemsParPage)
+		];
+
+		
+		
+	}
+
 	//Método para adicionar produtos na categoria
 	public function addProduct(Product $product)
 	{

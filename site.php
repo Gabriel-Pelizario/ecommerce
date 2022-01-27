@@ -18,18 +18,34 @@ $app->get('/', function() {
 	]); 
 });
 
-//Rota para as categorias
+//Rota para as categorias e paginação
 $app->get("/categories/:idcategory", function($idcategory){
+
+	$page = (isset($_GET['page'])) ? (int)$_GET['page'] :1;
 
 	$category = new Category();
 
 	//carregando a categoria
 	$category->get((int)$idcategory);
 
+	//Paginação
+	$pagination = $category->getProductsPage($page);
+
+	$pages = [];
+
+	for ($i=1; $i<= $pagination['pages']; $i++) {
+		array_push($pages, [
+			'link'=>'/categories/'.$category->getidcategory().'?page='.$i,
+			'page'=>$i
+		]);
+	}
+
 	$page = new page();
+
 	$page->setTpl("category",[
 		'category'=>$category->getValues(),
-		'products'=>Product::checkList($category->getProducts())
+		'products'=>$pagination["data"],
+		'pages'=>$pages
 	]); 
 
 });
