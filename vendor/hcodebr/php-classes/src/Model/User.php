@@ -16,6 +16,7 @@ class User extends Model
 	const ERROR_REGISTER = "UserErrorRegister";
 	const SUCCESS = "UserSucesss";
 
+
 	//função para uso da sessão
 	public static function getFromSession()
 	{
